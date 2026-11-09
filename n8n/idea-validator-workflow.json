@@ -1,0 +1,214 @@
+{
+  "name": "Idea Validator API",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "validate-idea",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "c8ad52e8-ec54-4cbf-9e60-fc1b8f92f3a6",
+      "name": "Webhook",
+      "webhookId": "5a63fd23-8071-4acf-a569-bd282718de45"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ ...$json.output, sources: $('Підготувати контекст').first().json.sources }) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1056,
+        0
+      ],
+      "id": "0ac08801-df89-4094-844c-902fd108591a",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Ти — досвідчений бізнес-аналітик і венчурний інвестор. Критично і чесно оціни бізнес-ідею.\n\nІдея: {{ $json.idea }}\nРинок: {{ $json.market }}\n\nСвіжі дані з інтернет-пошуку (можуть містити шум — ігноруй нерелевантне):\nКоротка відповідь пошуковика: {{ $json.search_answer }}\nДжерела:\n{{ $json.sources.map((s, i) => `[${i + 1}] ${s.title} (${s.url}): ${s.content}`).join('\\n') }}\n\nВимоги:\n- Спирайся на джерела, коли вони релевантні; не вигадуй факти.\n- competitors — реальні компанії. Якщо компанія є в джерелах, вкажи її url; якщо знаєш її сам — url залиш порожнім \"\".\n- score — ціле число 0–100 (наскільки ідея життєздатна).\n- verdict — одне з: \"Перспективна\", \"Потребує доопрацювання\", \"Ризикована\".\n- У кожному розділі SWOT 3–5 пунктів, ризиків 3–5, наступних кроків 3–5, конкурентів 3–6.\n- level ризику — одне з: \"high\", \"medium\", \"low\".\n- Відповідай українською мовою.",
+        "hasOutputParser": true,
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        672,
+        0
+      ],
+      "id": "b379b0e5-6112-46ce-9317-8aa97323410d",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3.1-flash-lite",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        672,
+        192
+      ],
+      "id": "044598b4-ff67-4ab8-ad93-e7b709edff16",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ltJioxlsV06hrC4r",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"summary\": \"Коротко суть ідеї та загальне враження у 2-3 реченнях\",\n  \"score\": 72,\n  \"verdict\": \"Перспективна\",\n  \"competitors\": [\n    { \"name\": \"...\", \"description\": \"Що пропонують і чим відрізняються\", \"url\": \"https://...\" }\n  ],\n  \"swot\": {\n    \"strengths\": [\"...\"],\n    \"weaknesses\": [\"...\"],\n    \"opportunities\": [\"...\"],\n    \"threats\": [\"...\"]\n  },\n  \"lean_canvas\": {\n    \"problem\": \"...\",\n    \"customer_segments\": \"...\",\n    \"unique_value_proposition\": \"...\",\n    \"solution\": \"...\",\n    \"channels\": \"...\",\n    \"revenue_streams\": \"...\",\n    \"cost_structure\": \"...\",\n    \"key_metrics\": \"...\",\n    \"unfair_advantage\": \"...\"\n  },\n  \"risks\": [\n    { \"risk\": \"...\", \"level\": \"high\", \"mitigation\": \"...\" }\n  ],\n  \"next_steps\": [\"...\"]\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        816,
+        192
+      ],
+      "id": "6d0b9ed2-8428-41c3-b85c-36e91c6e11e5",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.tavily.com/search",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "=json",
+        "bodyParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "jsonBody": "={{ JSON.stringify({ query: $json.body.idea + \" \" + $json.body.market + \" конкуренти, ціни, ринок\", max_results: 8, include_answer: true }) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        224,
+        0
+      ],
+      "id": "80caaaff-9839-4958-b76b-e27e29f9636f",
+      "name": "HTTP Request",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "FfowB6lPNid6YNoL",
+          "name": "Semantic Scholar API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Відповідь Tavily\nconst tavily = $input.first().json;\n// Вхідні дані з форми беремо прямо з вузла Webhook\nconst body = $('Webhook').first().json.body;\n\n// Залишаємо лише релевантні результати і тільки потрібні поля\nconst sources = (tavily.results || [])\n  .filter(r => r.score >= 0.1)\n  .map(r => ({\n    title: r.title,\n    url: r.url,\n    content: (r.content || '').replace(/\\s+/g, ' ').slice(0, 600),\n  }));\n\nreturn [{\n  json: {\n    idea: body.idea,\n    market: body.market,\n    search_answer: tavily.answer || '',\n    sources,\n  },\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        448,
+        0
+      ],
+      "id": "35e6d8c8-1f69-41f7-9666-fa3fcfe63422",
+      "name": "Підготувати контекст"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Підготувати контекст",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Підготувати контекст": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "07e442cd-9e73-4af5-8ec7-f0d9f9413285",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d22f5bbb45c58b0762e55afa9e76ad9bb1e6519aa7ca8a6c6f07b364ec5f1a8a"
+  },
+  "nodeGroups": [],
+  "id": "2dfamsUaHL1v1BGA",
+  "tags": []
+}
