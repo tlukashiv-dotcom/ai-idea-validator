@@ -61,23 +61,65 @@ ai-idea-validator/
     └── idea-validator-workflow.json   # exported n8n workflow
 ```
 
-## Run locally
+## Quick start (demo mode, no API keys)
 
-### 1. n8n backend
+See the UI with real saved reports in ~2 minutes. Requires **Node.js 20.19+** and Git.
+
+```bash
+git clone https://github.com/tlukashiv-dotcom/ai-idea-validator.git
+cd ai-idea-validator/frontend
+npm install
+VITE_DEMO_MODE=true npm run dev
+```
+
+Open http://localhost:5173 and click one of the sample reports.
+
+## Run the full app locally (live AI analysis)
+
+### Prerequisites
+
+- [Docker](https://www.docker.com/products/docker-desktop/) (for n8n)
+- [Node.js](https://nodejs.org/) 20.19+ (for the frontend)
+- Free API keys:
+  - **Google Gemini** — [Google AI Studio](https://aistudio.google.com/apikey)
+  - **Tavily Search** — [tavily.com](https://tavily.com) (1,000 free searches/month)
+
+### 1. Start n8n
 
 ```bash
 docker volume create n8n_data
 docker run -it --rm --name n8n -p 5678:5678 -v n8n_data:/home/node/.n8n docker.n8n.io/n8nio/n8n
 ```
 
-1. Open http://localhost:5678 → **Import from file** → `n8n/idea-validator-workflow.json`.
-2. Create credentials:
-   - **Google Gemini (PaLM) API** — free key from [Google AI Studio](https://aistudio.google.com/apikey)
-   - **Header Auth** for Tavily — `Authorization: Bearer tvly-...` (free key at [tavily.com](https://tavily.com))
-3. In the **Webhook** node set *Allowed Origins (CORS)* to your frontend URL (or `*` for local dev).
-4. **Publish** the workflow.
+Open http://localhost:5678 and create the owner account (local only).
 
-### 2. Frontend
+### 2. Import the workflow
+
+**Create Workflow** → **⋯** menu (next to the workflow name) → **Import from file** → select `n8n/idea-validator-workflow.json`.
+
+### 3. Connect your own API keys
+
+The exported workflow contains **no credentials** — after import, the nodes that need keys show a warning. Open each one and create a credential:
+
+| Node | Credential type | Value |
+|---|---|---|
+| **HTTP Request** (Tavily) | Generic Credential Type → **Header Auth** | Name: `Authorization`, Value: `Bearer tvly-YOUR_KEY` |
+| **Google Gemini Chat Model** | Google Gemini (PaLM) API | your Gemini API key; then pick a model from the list (e.g. `gemini-2.5-flash`) |
+
+### 4. Enable CORS and publish
+
+1. Open the **Webhook** node → **Options** → **Allowed Origins (CORS)** → `*` for local development (or your frontend URL).
+2. Save and click **Publish**.
+
+Test the API:
+
+```bash
+curl -X POST http://localhost:5678/webhook/validate-idea \
+  -H "Content-Type: application/json" \
+  -d '{"idea":"Coffee subscription service for offices","market":"Ukraine"}'
+```
+
+### 5. Start the frontend
 
 ```bash
 cd frontend
@@ -85,14 +127,23 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:5173. To run the static demo mode (saved reports, no backend): `VITE_DEMO_MODE=true npm run dev`.
+Open http://localhost:5173, describe an idea and click **Validate idea** (analysis takes ~20–40 s).
 
-By default the app calls `http://localhost:5678/webhook/validate-idea`; override it with an env variable:
+By default the app calls `http://localhost:5678/webhook/validate-idea`. To use another n8n host:
 
 ```bash
 # frontend/.env
 VITE_API_URL=https://your-n8n-host/webhook/validate-idea
 ```
+
+### Troubleshooting
+
+| Problem | Fix |
+|---|---|
+| `Could not reach the server` in the UI | n8n is not running, the workflow is not published, or CORS is not enabled in the Webhook node |
+| `webhook "validate-idea" is not registered` (404) | Click **Publish** in n8n (production URL works only for published workflows) |
+| Gemini error `resource could not be found` | Select the model **from the list** in the Gemini node instead of typing its name |
+| Gemini `429 / quota exceeded` | Free tier rate limit — wait a minute or use `gemini-2.5-flash-lite` |
 
 ## API
 
