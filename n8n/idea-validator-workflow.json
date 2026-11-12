@@ -23,7 +23,7 @@
     {
       "parameters": {
         "respondWith": "json",
-        "responseBody": "={{ JSON.stringify({ ...$json.output, sources: $('Підготувати контекст').first().json.sources }) }}",
+        "responseBody": "={{ JSON.stringify({ ...$json.output, sources: $('Prepare context').first().json.sources }) }}",
         "options": {}
       },
       "type": "n8n-nodes-base.respondToWebhook",
@@ -38,7 +38,7 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "=Ти — досвідчений бізнес-аналітик і венчурний інвестор. Критично і чесно оціни бізнес-ідею.\n\nІдея: {{ $json.idea }}\nРинок: {{ $json.market }}\n\nСвіжі дані з інтернет-пошуку (можуть містити шум — ігноруй нерелевантне):\nКоротка відповідь пошуковика: {{ $json.search_answer }}\nДжерела:\n{{ $json.sources.map((s, i) => `[${i + 1}] ${s.title} (${s.url}): ${s.content}`).join('\\n') }}\n\nВимоги:\n- Спирайся на джерела, коли вони релевантні; не вигадуй факти.\n- competitors — реальні компанії. Якщо компанія є в джерелах, вкажи її url; якщо знаєш її сам — url залиш порожнім \"\".\n- score — ціле число 0–100 (наскільки ідея життєздатна).\n- verdict — одне з: \"Перспективна\", \"Потребує доопрацювання\", \"Ризикована\".\n- У кожному розділі SWOT 3–5 пунктів, ризиків 3–5, наступних кроків 3–5, конкурентів 3–6.\n- level ризику — одне з: \"high\", \"medium\", \"low\".\n- Відповідай українською мовою.",
+        "text": "=You are an experienced business analyst and venture investor. Critically and honestly evaluate the business idea below.\n\nIdea: {{ $json.idea }}\nTarget market: {{ $json.market }}\n\nFresh web search results (may contain noise — ignore anything irrelevant):\nSearch engine summary: {{ $json.search_answer }}\nSources:\n{{ $json.sources.map((s, i) => `[${i + 1}] ${s.title} (${s.url}): ${s.content}`).join('\\n') }}\n\nRequirements:\n- Use the sources when they are relevant; do not invent facts.\n- competitors: real companies. If a company appears in the sources, give its url; if you know it yourself, leave url as an empty string \"\".\n- score: integer 0–100 (how viable the idea is).\n- verdict: exactly one of \"Promising\", \"Needs work\", \"Risky\".\n- 3–5 items in each SWOT section, 3–5 risks, 3–5 next steps, 3–6 competitors.\n- risk level: exactly one of \"high\", \"medium\", \"low\".\n- Write everything in English, even if the sources are in another language.",
         "hasOutputParser": true,
         "batching": {}
       },
@@ -59,8 +59,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1.2,
       "position": [
-        672,
-        192
+        592,
+        208
       ],
       "id": "044598b4-ff67-4ab8-ad93-e7b709edff16",
       "name": "Google Gemini Chat Model",
@@ -73,7 +73,7 @@
     },
     {
       "parameters": {
-        "jsonSchemaExample": "{\n  \"summary\": \"Коротко суть ідеї та загальне враження у 2-3 реченнях\",\n  \"score\": 72,\n  \"verdict\": \"Перспективна\",\n  \"competitors\": [\n    { \"name\": \"...\", \"description\": \"Що пропонують і чим відрізняються\", \"url\": \"https://...\" }\n  ],\n  \"swot\": {\n    \"strengths\": [\"...\"],\n    \"weaknesses\": [\"...\"],\n    \"opportunities\": [\"...\"],\n    \"threats\": [\"...\"]\n  },\n  \"lean_canvas\": {\n    \"problem\": \"...\",\n    \"customer_segments\": \"...\",\n    \"unique_value_proposition\": \"...\",\n    \"solution\": \"...\",\n    \"channels\": \"...\",\n    \"revenue_streams\": \"...\",\n    \"cost_structure\": \"...\",\n    \"key_metrics\": \"...\",\n    \"unfair_advantage\": \"...\"\n  },\n  \"risks\": [\n    { \"risk\": \"...\", \"level\": \"high\", \"mitigation\": \"...\" }\n  ],\n  \"next_steps\": [\"...\"]\n}"
+        "jsonSchemaExample": "{\n  \"summary\": \"2-3 sentence summary of the idea and the overall assessment\",\n  \"score\": 72,\n  \"verdict\": \"Promising\",\n  \"competitors\": [\n    { \"name\": \"...\", \"description\": \"What they offer and how they differ\", \"url\": \"https://...\" }\n  ],\n  \"swot\": {\n    \"strengths\": [\"...\"],\n    \"weaknesses\": [\"...\"],\n    \"opportunities\": [\"...\"],\n    \"threats\": [\"...\"]\n  },\n  \"lean_canvas\": {\n    \"problem\": \"...\",\n    \"customer_segments\": \"...\",\n    \"unique_value_proposition\": \"...\",\n    \"solution\": \"...\",\n    \"channels\": \"...\",\n    \"revenue_streams\": \"...\",\n    \"cost_structure\": \"...\",\n    \"key_metrics\": \"...\",\n    \"unfair_advantage\": \"...\"\n  },\n  \"risks\": [\n    { \"risk\": \"...\", \"level\": \"high\", \"mitigation\": \"...\" }\n  ],\n  \"next_steps\": [\"...\"]\n}"
       },
       "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
       "typeVersion": 1.3,
@@ -97,7 +97,7 @@
             {}
           ]
         },
-        "jsonBody": "={{ JSON.stringify({ query: $json.body.idea + \" \" + $json.body.market + \" конкуренти, ціни, ринок\", max_results: 8, include_answer: true }) }}",
+        "jsonBody": "={{ JSON.stringify({ query: $json.body.idea + \" \" + $json.body.market + \" competitors pricing market\", max_results: 8, include_answer: true }) }}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -126,7 +126,7 @@
         0
       ],
       "id": "35e6d8c8-1f69-41f7-9666-fa3fcfe63422",
-      "name": "Підготувати контекст"
+      "name": "Prepare context"
     }
   ],
   "pinData": {},
@@ -179,14 +179,14 @@
       "main": [
         [
           {
-            "node": "Підготувати контекст",
+            "node": "Prepare context",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Підготувати контекст": {
+    "Prepare context": {
       "main": [
         [
           {
@@ -203,7 +203,7 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "07e442cd-9e73-4af5-8ec7-f0d9f9413285",
+  "versionId": "0e8dc21b-8742-4438-88c0-562270b736ff",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "d22f5bbb45c58b0762e55afa9e76ad9bb1e6519aa7ca8a6c6f07b364ec5f1a8a"

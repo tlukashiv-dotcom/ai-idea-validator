@@ -2,7 +2,7 @@
 
 > Validate a startup idea in 30 seconds: real competitors from the web, SWOT, Lean Canvas, risks and a viability score — powered by an **n8n** AI workflow and a **React** dashboard.
 
-**Live demo:** _coming soon_ · **Stack:** n8n · Google Gemini · Tavily Search · React + Vite
+**Live demo:** https://tlukashiv-dotcom.github.io/ai-idea-validator/ _(demo mode with real saved reports)_ · **Stack:** n8n · Google Gemini · Tavily Search · React + Vite
 
 ![Dashboard screenshot](docs/screenshot.png)
 
@@ -50,7 +50,9 @@ ai-idea-validator/
 │       ├── api.js         # call to the n8n webhook
 │       ├── App.jsx        # form, loading/error states, dashboard layout
 │       ├── components.jsx # score ring, SWOT, Lean Canvas, risks, ...
+│       ├── examples/      # saved real reports for demo mode
 │       └── index.css      # design (light/dark, responsive)
+├── .github/workflows/ # GitHub Pages auto-deploy (demo mode)
 └── n8n/
     └── idea-validator-workflow.json   # exported n8n workflow
 ```
@@ -79,7 +81,9 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:5173. By default the app calls `http://localhost:5678/webhook/validate-idea`; override it with an env variable:
+Open http://localhost:5173. To run the static demo mode (saved reports, no backend): `VITE_DEMO_MODE=true npm run dev`.
+
+By default the app calls `http://localhost:5678/webhook/validate-idea`; override it with an env variable:
 
 ```bash
 # frontend/.env
@@ -100,7 +104,7 @@ Response (shortened):
 {
   "summary": "...",
   "score": 65,
-  "verdict": "Потребує доопрацювання",
+  "verdict": "Needs work",
   "competitors": [{ "name": "...", "description": "...", "url": "https://..." }],
   "swot": { "strengths": [], "weaknesses": [], "opportunities": [], "threats": [] },
   "lean_canvas": { "problem": "...", "customer_segments": "...", "...": "..." },
@@ -114,7 +118,8 @@ Response (shortened):
 
 - [ ] Search in the language of the target market
 - [ ] Export report to PDF
-- [ ] Free cloud deployment (n8n + static frontend)
+- [x] Static demo on GitHub Pages (saved real reports, auto-deploy via GitHub Actions)
+- [ ] Cloud deployment of the n8n backend
 - [ ] Rate limiting / simple abuse protection
 
 ## Author

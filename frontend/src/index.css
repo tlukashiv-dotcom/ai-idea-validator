@@ -146,3 +146,10 @@ a:hover { text-decoration: underline; }
   .swot, .canvas, .two-col { grid-template-columns: 1fr; }
   .sources li { flex-direction: column; gap: 0; }
 }
+
+/* Demo mode */
+.demo-banner {
+  margin-bottom: 20px; padding: 14px 18px; border-radius: 12px;
+  background: var(--accent-soft); color: var(--text); font-size: 14px;
+  border: 1px solid var(--border);
+}

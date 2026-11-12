@@ -1,10 +1,17 @@
-// Блоки дашборду. Кожен компонент отримує свою частину JSON-відповіді n8n.
+// Dashboard blocks. Each component renders its part of the n8n JSON response.
+
+// Badge color comes from the AI verdict; falls back to the score
+const VERDICT_TONES = {
+  Promising: 'good',
+  'Needs work': 'mid',
+  Risky: 'bad',
+}
 
 export function ScoreRing({ score = 0, verdict }) {
   const r = 52
   const c = 2 * Math.PI * r
   const value = Math.max(0, Math.min(100, Number(score) || 0))
-  const tone = value >= 70 ? 'good' : value >= 45 ? 'mid' : 'bad'
+  const tone = VERDICT_TONES[verdict] || (value >= 70 ? 'good' : value >= 45 ? 'mid' : 'bad')
   return (
     <div className="score">
       <svg viewBox="0 0 120 120" className={`ring ring--${tone}`} aria-hidden="true">
@@ -32,7 +39,7 @@ export function Card({ title, children, className = '' }) {
 export function Competitors({ items = [] }) {
   if (!items.length) return null
   return (
-    <Card title="Конкуренти">
+    <Card title="Competitors">
       <div className="competitors">
         {items.map((c, i) => (
           <article key={i} className="competitor">
@@ -48,16 +55,16 @@ export function Competitors({ items = [] }) {
 }
 
 const SWOT_LABELS = {
-  strengths: 'Сильні сторони',
-  weaknesses: 'Слабкі сторони',
-  opportunities: 'Можливості',
-  threats: 'Загрози',
+  strengths: 'Strengths',
+  weaknesses: 'Weaknesses',
+  opportunities: 'Opportunities',
+  threats: 'Threats',
 }
 
 export function Swot({ swot }) {
   if (!swot) return null
   return (
-    <Card title="SWOT-аналіз">
+    <Card title="SWOT analysis">
       <div className="swot">
         {Object.entries(SWOT_LABELS).map(([key, label]) => (
           <div key={key} className={`swot__cell swot__cell--${key}`}>
@@ -71,15 +78,15 @@ export function Swot({ swot }) {
 }
 
 const CANVAS_LABELS = [
-  ['problem', 'Проблема'],
-  ['customer_segments', 'Сегменти клієнтів'],
-  ['unique_value_proposition', 'Унікальна цінність'],
-  ['solution', 'Рішення'],
-  ['channels', 'Канали'],
-  ['revenue_streams', 'Джерела доходу'],
-  ['cost_structure', 'Структура витрат'],
-  ['key_metrics', 'Ключові метрики'],
-  ['unfair_advantage', 'Нечесна перевага'],
+  ['problem', 'Problem'],
+  ['customer_segments', 'Customer segments'],
+  ['unique_value_proposition', 'Unique value proposition'],
+  ['solution', 'Solution'],
+  ['channels', 'Channels'],
+  ['revenue_streams', 'Revenue streams'],
+  ['cost_structure', 'Cost structure'],
+  ['key_metrics', 'Key metrics'],
+  ['unfair_advantage', 'Unfair advantage'],
 ]
 
 export function LeanCanvas({ canvas }) {
@@ -98,12 +105,12 @@ export function LeanCanvas({ canvas }) {
   )
 }
 
-const LEVEL_LABELS = { high: 'Високий', medium: 'Середній', low: 'Низький' }
+const LEVEL_LABELS = { high: 'High', medium: 'Medium', low: 'Low' }
 
 export function Risks({ items = [] }) {
   if (!items.length) return null
   return (
-    <Card title="Ризики">
+    <Card title="Risks">
       <ul className="risks">
         {items.map((r, i) => (
           <li key={i} className="risk">
@@ -122,7 +129,7 @@ export function Risks({ items = [] }) {
 export function NextSteps({ items = [] }) {
   if (!items.length) return null
   return (
-    <Card title="Наступні кроки">
+    <Card title="Next steps">
       <ol className="steps">{items.map((s, i) => <li key={i}>{s}</li>)}</ol>
     </Card>
   )
@@ -131,7 +138,7 @@ export function NextSteps({ items = [] }) {
 export function Sources({ items = [] }) {
   if (!items.length) return null
   return (
-    <Card title="Джерела">
+    <Card title="Sources">
       <ul className="sources">
         {items.map((s, i) => (
           <li key={i}>
