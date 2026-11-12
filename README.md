@@ -183,13 +183,14 @@ Response (shortened):
 
 If you use this project, please cite it:
 
-> Lukashiv, T. (2026). *AI Business Idea Validator* (v1.0.0) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.24162892
+> Lukashiv, T., & Knignitska, T. (2026). *AI Business Idea Validator* (v1.0.0) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.24162892
 
 GitHub also offers a ready-made citation via **Cite this repository** (from `CITATION.cff`).
 
-## Author
+## Authors
 
-**Taras Lukashiv** · [GitHub](https://github.com/tlukashiv-dotcom) · [LinkedIn](https://www.linkedin.com/in/taras-lukashiv/) · [ORCID](https://orcid.org/0000-0002-1651-6402)
+- **Taras Lukashiv** · [GitHub](https://github.com/tlukashiv-dotcom) · [LinkedIn](https://www.linkedin.com/in/taras-lukashiv/) · [ORCID](https://orcid.org/0000-0002-1651-6402)
+- **Tetiana Knignitska** · [LinkedIn](https://www.linkedin.com/in/tetiana-knignitska-341a47207/) · [Google Scholar](https://scholar.google.com/citations?user=qY8nhzoAAAAJ)
 
 ## License
 
