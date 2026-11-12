@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "AI Business Idea Validator"
+abstract: "AI assistant that validates startup ideas: web search for real competitors (Tavily), structured analysis with Google Gemini (SWOT, Lean Canvas, risks, 0-100 viability score) orchestrated in n8n, with a React + Vite dashboard."
+type: software
+authors:
+  - family-names: "Lukashiv"
+    given-names: "Taras"
+version: "1.0.0"
+date-released: "2026-11-12"
+doi: "10.5281/zenodo.24162892"
+license: MIT
+repository-code: "https://github.com/tlukashiv-dotcom/ai-idea-validator"
+url: "https://tlukashiv-dotcom.github.io/ai-idea-validator/"
+keywords:
+  - n8n
+  - AI agent
+  - LLM
+  - Google Gemini
+  - business idea validation
+  - React

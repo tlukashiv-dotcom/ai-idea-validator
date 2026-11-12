@@ -1,5 +1,7 @@
 # AI Business Idea Validator
 
+[![DOI](https://zenodo.org/badge/1451570007.svg)](https://doi.org/10.5281/zenodo.24162892)
+
 > Validate a startup idea in 30 seconds: real competitors from the web, SWOT, Lean Canvas, risks and a viability score — powered by an **n8n** AI workflow and a **React** dashboard.
 
 **Live demo:** https://tlukashiv-dotcom.github.io/ai-idea-validator/ _(demo mode with real saved reports)_ · **Stack:** n8n · Google Gemini · Tavily Search · React + Vite
@@ -176,6 +178,14 @@ Response (shortened):
 - [x] Static demo on GitHub Pages (saved real reports, auto-deploy via GitHub Actions)
 - [ ] Cloud deployment of the n8n backend
 - [ ] Rate limiting / simple abuse protection
+
+## Citation
+
+If you use this project, please cite it:
+
+> Lukashiv, T. (2026). *AI Business Idea Validator* (v1.0.0) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.24162892
+
+GitHub also offers a ready-made citation via **Cite this repository** (from `CITATION.cff`).
 
 ## Author
 
