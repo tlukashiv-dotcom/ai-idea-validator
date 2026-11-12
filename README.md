@@ -189,7 +189,7 @@ GitHub also offers a ready-made citation via **Cite this repository** (from `CIT
 
 ## Author
 
-**Taras Lukashiv** — built as a hands-on project to learn AI automation with n8n.
+**Taras Lukashiv** · [GitHub](https://github.com/tlukashiv-dotcom) · [LinkedIn](https://www.linkedin.com/in/taras-lukashiv/) · [ORCID](https://orcid.org/0000-0002-1651-6402)
 
 ## License
 
