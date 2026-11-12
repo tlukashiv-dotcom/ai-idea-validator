@@ -6,6 +6,10 @@
 
 ![Dashboard screenshot](docs/screenshot.png)
 
+
+https://github.com/user-attachments/assets/0d0954b2-788b-4f9c-beb4-6fcc6865b209
+
+
 ## What it does
 
 Enter a business idea and a target market — the assistant:
